@@ -1,0 +1,33 @@
+<!-- app/templates/post_detail.html -->
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+  <article>
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+    <p><strong>Tags:</strong> {{ post.tags }}</p>
+    <p>Posted by {{ post.author.username }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+    
+    {% if current_user.is_authenticated and current_user.id == post.author.id %}
+      <a href="{{ url_for('posts.edit_post', post_id=post.id) }}">Edit</a>
+      <form method="post" action="{{ url_for('posts.delete_post', post_id=post.id) }}" style="display:inline;">
+        <button type="submit" onclick="return confirm('Are you sure?');">Delete</button>
+      </form>
+    {% endif %}
+  </article>
+  
+  <section>
+    <h3>Comments</h3>
+    {% for comment in post.comments %}
+      <div class="comment" style="margin-left: 20px; border: 1px solid #ccc; padding: 10px; margin-bottom: 5px;">
+        <p><strong>{{ comment.author.username }}:</strong> {{ comment.content }}</p>
+        <small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+        <br>
+        <a href="{{ url_for('comments.add_comment', post_id=post.id) }}?parent_id={{ comment.id }}">Reply</a>
+      </div>
+    {% else %}
+      <p>No comments yet.</p>
+    {% endfor %}
+    <a href="{{ url_for('comments.add_comment', post_id=post.id) }}">Add a Comment</a>
+  </section>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!-- app/templates/posts_list.html -->
+{% extends "base.html" %}
+{% block title %}Posts{% endblock %}
+{% block content %}
+  <h2>Posts</h2>
+  <form method="get" action="{{ url_for('posts.list_posts') }}">
+    <input type="text" name="search" placeholder="Search..." value="{{ request.args.get('search', '') }}">
+    <button type="submit">Search</button>
+  </form>
+  <ul>
+    {% for post in posts %}
+      <li>
+        <a href="{{ url_for('posts.get_post', post_id=post.id) }}">{{ post.title }}</a>
+        <small>by {{ post.author.username }} on {{ post.created_at.strftime('%Y-%m-%d') }}</small>
+      </li>
+    {% else %}
+      <li>No posts found.</li>
+    {% endfor %}
+  </ul>
+  
+  <!-- Pagination (simple previous/next) -->
+  <div class="pagination">
+    {% if pagination.has_prev %}
+      <a href="{{ url_for('posts.list_posts', page=pagination.prev_num, search=request.args.get('search')) }}">Previous</a>
+    {% endif %}
+    <span>Page {{ pagination.page }} of {{ pagination.pages }}</span>
+    {% if pagination.has_next %}
+      <a href="{{ url_for('posts.list_posts', page=pagination.next_num, search=request.args.get('search')) }}">Next</a>
+    {% endif %}
+  </div>
+{% endblock %}

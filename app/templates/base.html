@@ -1,0 +1,43 @@
+<!-- app/templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Blog Platform{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1><a href="{{ url_for('posts.list_posts') }}">My Blog</a></h1>
+    <nav>
+      {% if current_user.is_authenticated %}
+        <span>Logged in as {{ current_user.username }}</span>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Login</a>
+        <a href="{{ url_for('auth.register') }}">Register</a>
+      {% endif %}
+      <a href="{{ url_for('posts.create_post') }}">New Post</a>
+    </nav>
+    <hr>
+  </header>
+  
+  <main>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  
+  <footer>
+    <hr>
+    <p>&copy; 2025 My Blog Platform</p>
+  </footer>
+</body>
+</html>

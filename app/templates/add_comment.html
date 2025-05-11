@@ -1,0 +1,15 @@
+<!-- app/templates/add_comment.html -->
+{% extends "base.html" %}
+{% block title %}Add Comment{% endblock %}
+{% block content %}
+  <h2>Add Comment to "{{ post.title }}"</h2>
+  <form method="post" action="{{ url_for('comments.add_comment', post_id=post.id) }}">
+    {% if request.args.get('parent_id') %}
+      <input type="hidden" name="parent_id" value="{{ request.args.get('parent_id') }}">
+    {% endif %}
+    <label for="content">Comment:</label>
+    <textarea name="content" id="content" rows="4" required></textarea>
+    <br>
+    <button type="submit">Submit Comment</button>
+  </form>
+{% endblock %}
